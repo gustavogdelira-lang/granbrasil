@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Porto de Santos — O Corredor dos Grãos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#071119;
+    --bg-1:#0E2534;
+    --bg-2:#122C3D;
+    --panel:#153140;
+    --panel-2:#1B3A4B;
+    --line:#2C4C5E;
+    --line-soft:#213E4D;
+    --gold:#C89B3C;
+    --gold-light:#E7C876;
+    --soy:#8AAB63;
+    --soy-deep:#61804A;
+    --text:#F2EEE0;
+    --text-soft:#B9C9CE;
+    --text-mute:#84979F;
+    --font-serif:'IBM Plex Serif', Georgia, serif;
+    --font-sans:'IBM Plex Sans', -apple-system, Segoe UI, sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top: calc(60px + env(safe-area-inset-top,0px));}
+  body{
+    margin:0; background:var(--bg-1); color:var(--text);
+    font-family:var(--font-sans); line-height:1.6; font-size:16px;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  h1,h2,h3,h4{font-family:var(--font-serif); font-weight:600; margin:0; letter-spacing:-0.01em; color:var(--text);}
+  .mono{font-family:var(--font-mono);}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+
+  header.topnav{
+    position:sticky; top:0; z-index:50; top:env(safe-area-inset-top,0px);
+    background:rgba(7,17,25,0.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .navrow{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; max-width:1200px; margin:0 auto; gap:16px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--font-serif); font-size:1.02rem; font-weight:600; white-space:nowrap;}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);}
+  .brand small{font-family:var(--font-mono); color:var(--text-mute); font-size:0.68rem; font-weight:400;}
+  nav.links{display:flex; gap:18px; font-size:0.8rem; flex-wrap:wrap; justify-content:flex-end;}
+  nav.links a{color:var(--text-soft); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:3px; transition:color .15s, border-color .15s; white-space:nowrap;}
+  nav.links a:hover{color:var(--gold-light); border-color:var(--gold-light);}
+  @media (max-width:900px){ nav.links{display:none;} }
+
+  .hero{
+    background:
+      radial-gradient(1100px 480px at 82% -10%, rgba(200,155,60,0.14), transparent 60%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1) 65%);
+    position:relative; overflow:hidden; padding:64px 0 56px; border-bottom:1px solid var(--line-soft);
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0; opacity:0.13; pointer-events:none;
+    background-image:
+      repeating-linear-gradient(115deg, rgba(231,200,118,0.5) 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(25deg, rgba(231,200,118,0.35) 0 1px, transparent 1px 84px);
+  }
+  .herogrid{position:relative; display:grid; grid-template-columns:1.25fr 0.9fr; gap:48px; align-items:center;}
+  @media (max-width:860px){ .herogrid{grid-template-columns:1fr;} }
+  .eyebrow-doc{
+    display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:0.72rem;
+    color:var(--gold-light); border:1px solid var(--line); border-radius:3px; padding:6px 10px; margin-bottom:22px;
+    background:rgba(255,255,255,0.02);
+  }
+  .hero h1{font-size:clamp(2.1rem, 4.6vw, 3.4rem); line-height:1.08; max-width:13ch;}
+  .hero h1 em{font-style:italic; color:var(--gold-light);}
+  .hero p.lede{font-size:1.05rem; color:var(--text-soft); max-width:48ch; margin-top:18px;}
+  .hero-coord{margin-top:28px; font-family:var(--font-mono); font-size:0.78rem; color:var(--text-mute); display:flex; gap:18px; flex-wrap:wrap;}
+  .stat-panel{background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:4px; padding:22px 24px;}
+  .stat-panel .stat-head{font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.04em; color:var(--text-mute); border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:16px; display:flex; justify-content:space-between;}
+  .stat-big{display:flex; align-items:baseline; gap:10px; margin-bottom:4px;}
+  .stat-big .num{font-family:var(--font-serif); font-size:2.6rem; font-weight:600; color:var(--gold-light);}
+  .stat-big .unit{font-size:0.95rem; color:var(--text-soft);}
+  .stat-panel .stat-label{font-size:0.86rem; color:var(--text-mute); margin-bottom:18px;}
+  .subrow{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; border-top:1px solid var(--line); padding-top:14px;}
+  .subrow div .n{font-family:var(--font-mono); font-size:1.15rem; color:var(--text);}
+  .subrow div .l{font-size:0.75rem; color:var(--text-mute);}
+
+  section{padding:66px 0;}
+  section.alt{background:var(--bg-2);}
+  .section-head{max-width:60ch; margin-bottom:38px;}
+  .section-tag{font-family:var(--font-mono); font-size:0.72rem; color:var(--gold-light); letter-spacing:0.02em; margin-bottom:10px; display:block;}
+  .section-head h2{font-size:clamp(1.55rem,3vw,2.05rem); line-height:1.18;}
+  .section-head p{margin-top:12px; color:var(--text-soft); font-size:0.98rem;}
+  .rule{height:1px; background:var(--line-soft); border:0; margin:0;}
+
+  .panorama{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);}
+  @media (max-width:760px){ .panorama{grid-template-columns:1fr;} }
+  .panorama .card{background:var(--panel); padding:26px 24px;}
+  .panorama .card .k{font-family:var(--font-mono); font-size:0.7rem; color:var(--gold-light); margin-bottom:10px;}
+  .panorama .card h3{font-size:1.05rem; margin-bottom:8px;}
+  .panorama .card p{font-size:0.92rem; color:var(--text-soft); margin:0;}
+
+  .barlist{display:flex; flex-direction:column; gap:16px; margin-top:8px;}
+  .barrow{display:grid; grid-template-columns:150px 1fr 92px; align-items:center; gap:14px;}
+  @media (max-width:640px){ .barrow{grid-template-columns:96px 1fr 70px; gap:10px;} }
+  .barrow .label{font-size:0.92rem;}
+  .barrow .label small{display:block; font-family:var(--font-mono); font-size:0.68rem; color:var(--text-mute);}
+  .bartrack{height:14px; background:var(--panel); border:1px solid var(--line); position:relative;}
+  .barfill{height:100%; background:linear-gradient(90deg, var(--soy-deep), var(--soy)); }
+  .barrow .val{font-family:var(--font-mono); font-size:0.92rem; text-align:right;}
+  .numgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); margin-top:44px;}
+  @media (max-width:760px){ .numgrid{grid-template-columns:repeat(2,1fr);} }
+  .numgrid .cell{background:var(--panel); padding:20px 18px;}
+  .numgrid .cell .n{font-family:var(--font-serif); font-size:1.6rem; color:var(--gold-light);}
+  .numgrid .cell .l{font-family:var(--font-mono); font-size:0.7rem; color:var(--text-mute); margin-top:6px;}
+
+  .steps{border-top:1px solid var(--line-soft);}
+  .step{border-bottom:1px solid var(--line-soft);}
+  .step-head{width:100%; display:flex; align-items:center; gap:18px; background:transparent; border:0; color:inherit; text-align:left; padding:20px 0; cursor:pointer; font-family:var(--font-sans);}
+  .step-head .idx{font-family:var(--font-mono); font-size:0.85rem; color:var(--gold-light); width:34px; flex-shrink:0;}
+  .step-head .ttl{flex:1;}
+  .step-head .ttl .stg{display:block; font-family:var(--font-mono); font-size:0.66rem; color:var(--text-mute); margin-bottom:3px;}
+  .step-head .ttl h4{font-size:1.05rem; font-weight:500;}
+  .step-head .chev{font-family:var(--font-mono); color:var(--text-mute); transition:transform .2s; flex-shrink:0;}
+  .step.open .chev{transform:rotate(45deg);}
+  .step-body{max-height:0; overflow:hidden; transition:max-height .28s ease;}
+  .step-body-inner{padding:0 0 24px 52px; color:var(--text-soft); font-size:0.94rem; max-width:66ch;}
+  .step-body-inner .src{font-family:var(--font-mono); font-size:0.72rem; color:var(--text-mute); margin-top:10px;}
+
+  .termgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); margin-top:8px;}
+  @media (max-width:760px){ .termgrid{grid-template-columns:1fr;} }
+  .termgrid .card{background:var(--panel); padding:22px 24px; display:flex; flex-direction:column; gap:6px;}
+  .termgrid .card .row1{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .termgrid .card h3{font-size:1rem;}
+  .termgrid .card .cap{font-family:var(--font-mono); font-size:0.82rem; color:var(--gold-light); white-space:nowrap;}
+  .termgrid .card p{font-size:0.88rem; color:var(--text-soft); margin:0;}
+
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start;}
+  @media (max-width:760px){ .split{grid-template-columns:1fr;} }
+  .modal-row{display:flex; align-items:center; gap:12px; margin-bottom:10px; font-size:0.9rem; color:var(--text-soft);}
+  .modal-row .sw{width:12px; height:12px; flex-shrink:0;}
+  .modal-track{height:34px; display:flex; width:100%; border:1px solid var(--line); overflow:hidden; margin-top:14px;}
+  .modal-seg{height:100%; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.72rem; color:var(--bg-0);}
+
+  ul.plain{list-style:none; margin:0; padding:0; border-top:1px solid var(--line-soft);}
+  ul.plain li{padding:12px 0; border-bottom:1px solid var(--line-soft); display:flex; justify-content:space-between; gap:12px; font-size:0.92rem;}
+  ul.plain li .t{color:var(--text-soft);}
+  ul.plain li .v{font-family:var(--font-mono); flex-shrink:0; color:var(--gold-light);}
+
+  .destlist{display:flex; flex-direction:column; gap:14px; margin-top:6px;}
+  .destrow{display:grid; grid-template-columns:150px 1fr 60px; align-items:center; gap:14px;}
+  @media (max-width:640px){ .destrow{grid-template-columns:90px 1fr 46px; gap:10px;} }
+  .desttrack{height:10px; background:var(--panel); border:1px solid var(--line);}
+  .destfill{height:100%; background:linear-gradient(90deg, var(--gold), var(--gold-light));}
+  .destrow .val{font-family:var(--font-mono); font-size:0.85rem; text-align:right;}
+
+  .timeline{position:relative; margin-top:12px; padding-left:26px; border-left:1px solid var(--line-soft);}
+  .tl-item{position:relative; padding:0 0 34px 22px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{content:""; position:absolute; left:-31px; top:4px; width:9px; height:9px; border-radius:50%; background:var(--gold); border:2px solid var(--bg-1);}
+  section.alt .tl-item::before{border-color:var(--bg-2);}
+  .tl-item .yr{font-family:var(--font-mono); font-size:0.8rem; color:var(--gold-light); display:block; margin-bottom:4px;}
+  .tl-item h4{font-size:1rem; margin-bottom:4px;}
+  .tl-item p{margin:0; font-size:0.9rem; color:var(--text-soft); max-width:58ch;}
+
+  .challenge-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); margin-top:8px;}
+  @media (max-width:760px){ .challenge-grid{grid-template-columns:1fr;} }
+  .challenge-grid .card{background:var(--panel); padding:24px 22px;}
+  .challenge-grid .card .tag2{font-family:var(--font-mono); font-size:0.68rem; color:var(--soy); margin-bottom:10px; display:block;}
+  .challenge-grid .card h3{font-size:1rem; margin-bottom:8px;}
+  .challenge-grid .card p{font-size:0.88rem; color:var(--text-soft); margin:0;}
+
+  footer{background:var(--bg-0); color:var(--text-mute); padding:56px 0 40px; border-top:1px solid var(--line-soft);}
+  footer h4{color:var(--text); font-size:1rem; margin-bottom:12px;}
+  .fichabox{border:1px solid var(--line); background:rgba(255,255,255,0.02); padding:20px 22px; margin-bottom:44px;}
+  .fichabox .fichatag{font-family:var(--font-mono); font-size:0.68rem; color:var(--gold-light); display:block; margin-bottom:14px;}
+  .fichagrid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  @media (max-width:760px){ .fichagrid{grid-template-columns:repeat(2,1fr);} }
+  .fichagrid div .fl{font-family:var(--font-mono); font-size:0.68rem; color:var(--text-mute); margin-bottom:4px;}
+  .fichagrid div .fv{font-size:0.9rem; color:var(--text); border-bottom:1px dashed var(--line); padding-bottom:6px;}
+  .footgrid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px;}
+  @media (max-width:760px){ .footgrid{grid-template-columns:1fr; gap:28px;} }
+  footer p{font-size:0.86rem; line-height:1.6; margin:0;}
+  footer ul{list-style:none; margin:0; padding:0; font-size:0.82rem; display:flex; flex-direction:column; gap:8px;}
+  .footbottom{margin-top:40px; padding-top:20px; border-top:1px solid var(--line-soft); font-family:var(--font-mono); font-size:0.7rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="navrow">
+    <div class="brand"><span class="dot"></span>Porto de Santos <small>/ corredor de grãos</small></div>
+    <nav class="links">
+      <a href="#panorama">Panorama</a>
+      <a href="#historia">História</a>
+      <a href="#numeros">Números</a>
+      <a href="#processo">Processo</a>
+      <a href="#terminais">Terminais</a>
+      <a href="#logistica">Logística</a>
+      <a href="#rotas">Rotas</a>
+      <a href="#desafios">Desafios</a>
+      <a href="#glossario">Glossário</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap herogrid">
+    <div>
+      <span class="eyebrow-doc">Estudo · Comércio Exterior · Exportação de grãos</span>
+      <h1>O grão brasileiro <em>sai pelo mar</em> em Santos</h1>
+      <p class="lede">Um panorama do maior porto da América Latina: sua história, sua estrutura de terminais e o caminho documental que a soja e o milho percorrem até o porão do navio.</p>
+      <div class="hero-coord">
+        <span>23°58′ S, 46°20′ W</span>
+        <span>Santos — SP, Brasil</span>
+        <span>Margem esquerda e direita do estuário</span>
+      </div>
+    </div>
+    <div class="stat-panel">
+      <div class="stat-head"><span>MOVIMENTAÇÃO · 2025</span><span>recorde histórico</span></div>
+      <div class="stat-big"><span class="num">186,4</span><span class="unit">milhões de toneladas</span></div>
+      <div class="stat-label">+3,6% sobre o recorde anterior, de 179,8 Mt em 2024</div>
+      <div class="subrow">
+        <div><div class="n">44,9 Mt</div><div class="l">soja exportada</div></div>
+        <div><div class="n">15,2 Mt</div><div class="l">milho exportado</div></div>
+        <div><div class="n">29,6%</div><div class="l">da corrente de comércio do Brasil</div></div>
+        <div><div class="n">5.708</div><div class="l">navios atracados</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="panorama">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">01 — Panorama</span>
+      <h2>Por que Santos concentra tanto grão</h2>
+      <p>O porto reúne o que a soja e o milho precisam para chegar ao mundo: profundidade de canal em expansão, malha ferroviária ligando o Centro-Oeste ao litoral e uma cadeia de terminais dedicados a granéis sólidos.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="panorama">
+      <div class="card">
+        <div class="k">Escala</div>
+        <h3>O maior porto da América Latina</h3>
+        <p>Único complexo portuário brasileiro a movimentar mais de 180 milhões de toneladas em um ano, somando contêineres, granéis sólidos, líquidos e carga geral, e considerado o maior exportador de grãos do mundo.</p>
+      </div>
+      <div class="card">
+        <div class="k">Peso econômico</div>
+        <h3>Quase um terço do comércio exterior</h3>
+        <p>Em 2025, Santos respondeu por 29,6% de toda a corrente de comércio brasileira em valor FOB — a China foi o país com maior volume de cargas transacionadas pelo porto no ano.</p>
+      </div>
+      <div class="card">
+        <div class="k">Governança</div>
+        <h3>De estatal a concessão privada</h3>
+        <p>Administrado por mais de um século pelo poder público, o porto passou por um processo de desestatização concluído em 2023, quando a Autoridade Portuária de Santos se tornou uma concessionária privada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="historia">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">02 — Contexto histórico</span>
+      <h2>De porto do café a corredor de grãos</h2>
+      <p>A vocação exportadora de Santos não é recente: o porto nasceu para escoar commodity, mudou de produto algumas vezes e de dono outras tantas.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="yr mono">1892</span>
+        <h4>Inauguração do porto organizado</h4>
+        <p>A Companhia Docas de Santos inaugura os primeiros 260 metros de cais, concessão de 90 anos vencida pelo consórcio Gaffré &amp; Guinle para escoar a crescente produção paulista de café.</p>
+      </div>
+      <div class="tl-item">
+        <span class="yr mono">1973</span>
+        <h4>Nasce o "Corredor de Exportação"</h4>
+        <p>São inauguradas as instalações dedicadas à movimentação de granéis vegetais sólidos que passam a ser conhecidas como Corredor de Exportação — a base da estrutura hoje usada por soja e milho.</p>
+      </div>
+      <div class="tl-item">
+        <span class="yr mono">1993</span>
+        <h4>Lei dos Portos (8.630/93)</h4>
+        <p>A operação das cargas é transferida ao setor privado por meio de arrendamentos, instituindo o modelo landlord port: o poder público mantém a infraestrutura e opera terminais são arrendados a empresas privadas.</p>
+      </div>
+      <div class="tl-item">
+        <span class="yr mono">2013</span>
+        <h4>Nova Lei dos Portos (12.815/13)</h4>
+        <p>A legislação flexibiliza a instalação de Terminais de Uso Privado (TUPs) e recentraliza em Brasília o planejamento e as licitações de arrendamentos portuários.</p>
+      </div>
+      <div class="tl-item">
+        <span class="yr mono">2023</span>
+        <h4>Desestatização da Autoridade Portuária</h4>
+        <p>A gestão do porto público deixa de ser uma empresa estatal federal e passa a ser exercida por um concessionário privado, marcando o fim de mais de um século de administração direta pelo Estado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="numeros">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">03 — Números</span>
+      <h2>O que sai pelo cais em 2025</h2>
+      <p>Soja e milho dividem espaço com açúcar e celulose entre os produtos mais embarcados. Juntos, os grãos e seus derivados formam a espinha dorsal dos granéis sólidos do porto.</p>
+    </div>
+    <hr class="rule">
+    <div class="barlist" style="margin-top:32px;">
+      <div class="barrow">
+        <div class="label">Soja<small>em grão</small></div>
+        <div class="bartrack"><div class="barfill" style="width:100%"></div></div>
+        <div class="val">44,9 Mt</div>
+      </div>
+      <div class="barrow">
+        <div class="label">Açúcar<small>granel sólido</small></div>
+        <div class="bartrack"><div class="barfill" style="width:53.7%; background:linear-gradient(90deg,var(--gold),var(--gold-light));"></div></div>
+        <div class="val">24,1 Mt</div>
+      </div>
+      <div class="barrow">
+        <div class="label">Milho<small>em grão</small></div>
+        <div class="bartrack"><div class="barfill" style="width:33.9%"></div></div>
+        <div class="val">15,2 Mt</div>
+      </div>
+      <div class="barrow">
+        <div class="label">Farelo de soja<small>Brasil, via Santos</small></div>
+        <div class="bartrack"><div class="barfill" style="width:22.4%"></div></div>
+        <div class="val">10,0 Mt</div>
+      </div>
+      <div class="barrow">
+        <div class="label">Celulose<small>carga geral</small></div>
+        <div class="bartrack"><div class="barfill" style="width:21.8%; background:linear-gradient(90deg,#4E6A78,#8FA5AE);"></div></div>
+        <div class="val">9,8 Mt</div>
+      </div>
+    </div>
+
+    <div class="numgrid">
+      <div class="cell"><div class="n">34,57 Mt</div><div class="l">DA SOJA BRASILEIRA EMBARCADA EM SANTOS EM 2025</div></div>
+      <div class="cell"><div class="n">43,1%</div><div class="l">DO FARELO DE SOJA NACIONAL EXPORTADO SAI POR SANTOS</div></div>
+      <div class="cell"><div class="n">137,4 Mt</div><div class="l">TOTAL EMBARCADO NO PORTO EM 2025 (TODAS AS CARGAS)</div></div>
+      <div class="cell"><div class="n">78,9%</div><div class="l">DA SOJA BRASILEIRA EXPORTADA TEM A CHINA COMO DESTINO</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="processo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">04 — O processo</span>
+      <h2>Da habilitação da empresa ao navio no cais</h2>
+      <p>Antes de qualquer tonelada embarcar, a operação passa por sete etapas administrativas e aduaneiras, do cadastro da empresa exportadora até a averbação final do embarque no Siscomex.</p>
+    </div>
+    <div class="wrap" style="padding:0; max-width:920px; margin-left:0;">
+      <div class="steps" id="stepsList"></div>
+    </div>
+  </div>
+</section>
+
+<section id="terminais">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">05 — Terminais</span>
+      <h2>Quem opera o embarque de grãos</h2>
+      <p>A movimentação de soja, milho e farelo é dividida entre operadores privados que arrendam áreas do porto público ou mantêm terminais de uso privado nas duas margens do estuário.</p>
+    </div>
+    <div class="termgrid">
+      <div class="card">
+        <div class="row1"><h3>TGG — Terminal de Granéis do Guarujá</h3><span class="cap">margem direita</span></div>
+        <p>Parceria entre Amaggi e Bunge dedicada ao escoamento de soja e milho, um dos maiores terminais graneleiros do complexo.</p>
+      </div>
+      <div class="card">
+        <div class="row1"><h3>Termag — Terminal Marítimo do Guarujá</h3><span class="cap">margem direita</span></div>
+        <p>Operado com participação da Bunge, movimenta granéis sólidos agrícolas com acesso direto ao Corredor de Exportação.</p>
+      </div>
+      <div class="card">
+        <div class="row1"><h3>Terminal XXXIX</h3><span class="cap">Caramuru Alimentos</span></div>
+        <p>Estrutura dedicada ao embarque de soja e derivados operada em parceria com a Caramuru Alimentos.</p>
+      </div>
+      <div class="card">
+        <div class="row1"><h3>EPSA — T16 / T19</h3><span class="cap">grupo CLI</span></div>
+        <p>Antigos terminais de açúcar e grãos da Rumo, vendidos em 2022 ao grupo CLI, que também opera o terminal Tegram no Porto do Itaqui.</p>
+      </div>
+      <div class="card">
+        <div class="row1"><h3>Novo terminal TMGF / Embraport</h3><span class="cap">margem esquerda</span></div>
+        <p>Empreendimento da Rumo (Grupo Cosan) em parceria com a DP World, com capacidade projetada de 12,5 milhões de toneladas por ano — 9 Mt de grãos e 3,5 Mt de fertilizantes.</p>
+      </div>
+      <div class="card">
+        <div class="row1"><h3>Ferrovia Interna do Porto (Fips)</h3><span class="cap">infraestrutura</span></div>
+        <p>Malha ferroviária dentro da área portuária que conecta os terminais às linhas tronco, hoje sob concessão de um condomínio de empresas usuárias.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="logistica">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">06 — Logística de acesso</span>
+      <h2>Como o grão chega até o porto</h2>
+      <p>O gargalo da exportação raramente está no navio — está na estrada e na ferrovia que alimentam os armazéns portuários.</p>
+    </div>
+    <hr class="rule">
+    <div class="split" style="margin-top:32px;">
+      <div>
+        <h4 style="font-size:1rem; margin-bottom:6px;">Repartição modal do que chega a Santos</h4>
+        <p style="color:var(--text-soft); font-size:0.9rem; margin:0 0 6px;">Do total de soja, farelo de soja e milho embarcado no porto em 2024, apenas uma parte viajou de trem — o restante ainda depende de caminhões.</p>
+        <div class="modal-track">
+          <div class="modal-seg" style="width:69.8%; background:var(--soy);">Ferrovia · 37,48 Mt</div>
+          <div class="modal-seg" style="width:30.2%; background:#8FA5AE;">Rodovia</div>
+        </div>
+        <div class="modal-row" style="margin-top:14px;">
+          <span class="sw" style="background:var(--soy);"></span> 37,48 Mt chegaram por ferrovia
+        </div>
+        <div class="modal-row">
+          <span class="sw" style="background:#8FA5AE;"></span> o restante dos 53,72 Mt embarcados chegou por rodovia
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:1rem; margin-bottom:10px;">Expansão em curso</h4>
+        <ul class="plain">
+          <li><span class="t">Malha Paulista (Rumo), meta até 2026</span><span class="v">35 → 75 Mt/ano</span></li>
+          <li><span class="t">Novo terminal TMGF / Embraport</span><span class="v">12,5 Mt/ano</span></li>
+          <li><span class="t">— dos quais, em grãos</span><span class="v">9,0 Mt/ano</span></li>
+          <li><span class="t">Rotas do Arco Norte, participação em 2025</span><span class="v">39,5%</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rotas">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">07 — Rotas e destinos</span>
+      <h2>Para onde vai o grão embarcado em Santos</h2>
+      <p>A demanda chinesa por proteína animal e óleo vegetal segue concentrando o destino da soja brasileira, mas o porto atende centenas de rotas simultâneas.</p>
+    </div>
+    <div class="split">
+      <div>
+        <div class="destlist">
+          <div class="destrow"><span>China</span><div class="desttrack"><div class="destfill" style="width:100%"></div></div><span class="val mono">1º</span></div>
+          <div class="destrow"><span>Estados Unidos</span><div class="desttrack"><div class="destfill" style="width:52%"></div></div><span class="val mono">2º</span></div>
+          <div class="destrow"><span>Países da Europa</span><div class="desttrack"><div class="destfill" style="width:44%"></div></div><span class="val mono">3º</span></div>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-mute); margin-top:16px;">Ranking dos principais países de destino em fluxo comercial pelo Porto de Santos; a China concentrou 29,6% de todo o fluxo do porto em 2025.</p>
+      </div>
+      <div>
+        <ul class="plain">
+          <li><span class="t">Destinos atendidos pelo porto</span><span class="v">mais de 600</span></li>
+          <li><span class="t">Países de origem/destino de carga</span><span class="v">mais de 200</span></li>
+          <li><span class="t">Linhas internacionais de contêineres com escala no Brasil que passam por Santos</span><span class="v">≈ 94%</span></li>
+          <li><span class="t">Soja brasileira com destino à China</span><span class="v">78,9%</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="desafios">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">08 — Investimentos e desafios</span>
+      <h2>O que ameaça — e o que sustenta — a competitividade</h2>
+      <p>Crescer em volume não basta: o porto também precisa de calado, energia limpa e infraestrutura de acesso para manter sua posição.</p>
+    </div>
+    <div class="challenge-grid">
+      <div class="card">
+        <span class="tag2">Canal de acesso</span>
+        <h3>Aprofundamento para 16–17 metros</h3>
+        <p>Obras de derrocagem de rochas seguidas de dragagem buscam eliminar a dependência da maré para a entrada de navios maiores — cada centímetro de calado perdido reduz a carga transportável por embarcação.</p>
+      </div>
+      <div class="card">
+        <span class="tag2">Descarbonização</span>
+        <h3>Energia limpa nas operações</h3>
+        <p>O sistema de Onshore Power Supply passou a alimentar rebocadores com energia elétrica de origem hidrelétrica, parte do Manifesto ESG assumido pelo porto.</p>
+      </div>
+      <div class="card">
+        <span class="tag2">Mobilidade urbana</span>
+        <h3>Túnel Santos-Guarujá</h3>
+        <p>Obra financiada com garantia da União para ligar as duas margens do estuário, reduzindo o gargalo viário que hoje depende de balsas para o transporte de pessoas e cargas leves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="glossario">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">09 — Glossário</span>
+      <h2>Termos usados neste estudo</h2>
+      <p>Siglas e conceitos do comércio exterior que aparecem ao longo do site.</p>
+    </div>
+    <div class="termgrid">
+      <div class="card"><div class="row1"><h3>RADAR</h3><span class="cap mono">Siscomex</span></div><p>Registro e Rastreamento da Atuação dos Intervenientes Aduaneiros; habilitação obrigatória para operar no comércio exterior.</p></div>
+      <div class="card"><div class="row1"><h3>DU-E</h3><span class="cap mono">Siscomex</span></div><p>Declaração Única de Exportação; documento eletrônico que reúne os dados de uma operação e gera a RUC.</p></div>
+      <div class="card"><div class="row1"><h3>LPCO</h3><span class="cap mono">Portal Único</span></div><p>Licenças, Permissões, Certificados e Outros documentos exigidos por órgãos anuentes conforme o produto e o destino.</p></div>
+      <div class="card"><div class="row1"><h3>NCM</h3><span class="cap mono">Mercosul</span></div><p>Nomenclatura Comum do Mercosul; código que classifica fiscalmente a mercadoria exportada.</p></div>
+      <div class="card"><div class="row1"><h3>FOB</h3><span class="cap mono">Incoterm</span></div><p>Free on Board; valor da mercadoria já embarcada, sem incluir frete e seguro internacional — métrica usada para medir a corrente de comércio.</p></div>
+      <div class="card"><div class="row1"><h3>Landlord port</h3><span class="cap mono">modelo de gestão</span></div><p>Modelo em que o poder público mantém a infraestrutura e arrenda a operação das cargas a empresas privadas.</p></div>
+      <div class="card"><div class="row1"><h3>TUP</h3><span class="cap mono">Lei 12.815/13</span></div><p>Terminal de Uso Privado; instalação portuária fora da área pública arrendada, autorizada a operar cargas próprias ou de terceiros.</p></div>
+      <div class="card"><div class="row1"><h3>Corredor de Exportação</h3><span class="cap mono">Santos, 1973</span></div><p>Conjunto de instalações do porto dedicado à movimentação de granéis vegetais sólidos, como soja e milho.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer id="fontes">
+  <div class="wrap">
+    <div class="fichabox">
+      <span class="fichatag">FICHA DO TRABALHO — preencha antes da entrega</span>
+      <div class="fichagrid">
+        <div><div class="fl">INSTITUIÇÃO</div><div class="fv">&nbsp;</div></div>
+        <div><div class="fl">CURSO / DISCIPLINA</div><div class="fv">Comércio Exterior</div></div>
+        <div><div class="fl">ALUNO(S)</div><div class="fv">&nbsp;</div></div>
+        <div><div class="fl">DATA DE ENTREGA</div><div class="fv">&nbsp;</div></div>
+      </div>
+    </div>
+    <div class="footgrid">
+      <div>
+        <h4>Sobre este projeto</h4>
+        <p>Material desenvolvido como Projeto Integrador de Comércio Exterior, reunindo um panorama do Porto de Santos na exportação de grãos: história, estrutura de terminais, processo aduaneiro, logística de acesso e desafios de competitividade.</p>
+      </div>
+      <div>
+        <h4>Fontes</h4>
+        <ul>
+          <li>Autoridade Portuária de Santos — balanços de movimentação 2024–2025</li>
+          <li>ANTAQ — Agência Nacional de Transportes Aquaviários</li>
+          <li>CONAB — Anuário Agrológistico 2026</li>
+          <li>Receita Federal — Exportação Portal Único / Siscomex</li>
+          <li>MAPA — Certificado Fitossanitário Eletrônico (e-Phyto)</li>
+          <li>Ministério dos Portos e Aeroportos — Plano Safra de Grãos</li>
+          <li>Câmara dos Deputados — audiências sobre o sistema portuário (PL 733/2025)</li>
+        </ul>
+      </div>
+      <div>
+        <h4>No site</h4>
+        <ul>
+          <li><a href="#panorama">Panorama</a></li>
+          <li><a href="#historia">Contexto histórico</a></li>
+          <li><a href="#numeros">Números da exportação</a></li>
+          <li><a href="#processo">O processo aduaneiro</a></li>
+          <li><a href="#terminais">Terminais portuários</a></li>
+          <li><a href="#logistica">Logística de acesso</a></li>
+          <li><a href="#rotas">Rotas e destinos</a></li>
+          <li><a href="#desafios">Investimentos e desafios</a></li>
+          <li><a href="#glossario">Glossário</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footbottom">
+      <span>PORTO DE SANTOS — CORREDOR DE GRÃOS</span>
+      <span>PROJETO ACADÊMICO · USO DIDÁTICO</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const steps = [
+    {
+      stage: "Etapa 1 · Pré-requisito",
+      title: "Habilitação RADAR no Siscomex",
+      text: "É o registro que autoriza a empresa a operar no comércio exterior. Sem ele não é possível acessar o Portal Siscomex nem credenciar um despachante aduaneiro — por isso é o primeiro passo de qualquer exportação. A habilitação pode ser Expressa (até US$ 50 mil por semestre), Limitada (até US$ 150 mil) ou Ilimitada, e depende de documentos como contrato social, certidão da junta comercial e domicílio tributário eletrônico ativo.",
+      src: "Fonte: Siscomex / Receita Federal — habilitação de intervenientes aduaneiros."
+    },
+    {
+      stage: "Etapa 2 · Documentação",
+      title: "Documentação comercial e do produto",
+      text: "Reúne os documentos que descrevem a mercadoria e a venda: nota fiscal eletrônica, invoice comercial e packing list, além da classificação fiscal correta do produto (NCM). Para soja em grão destinada a consumo ou processamento, o código é 1201.90.00; para milho em grão, 1005.90.10.",
+      src: "Fonte: Tabela NCM — Nomenclatura Comum do Mercosul."
+    },
+    {
+      stage: "Etapa 3 · Controle administrativo",
+      title: "LPCO — Licenças, Permissões, Certificados e Outros documentos",
+      text: "Módulo do Portal Único que reúne as exigências de órgãos anuentes — MAPA, ANVISA, IBAMA, entre outros — conforme o NCM e o destino do produto. Para a soja, o LPCO relevante é o próprio Certificado Fitossanitário, obtido na etapa seguinte: aqui se confirma que o pedido foi aberto e aprovado antes do registro da DU-E.",
+      src: "Fonte: Portal Único de Comércio Exterior (Siscomex) — módulo LPCO."
+    },
+    {
+      stage: "Etapa 4 · Certificação sanitária",
+      title: "Certificado Fitossanitário Internacional (e-Phyto)",
+      text: "Emitido pelo MAPA, atesta que a carga está livre de pragas e doenças e apta a entrar no país de destino. O exportador solicita pelo sistema SHIVA, que emite o certificado eletrônico pela rede internacional ePhyto — ou pelo SIGVIG3, quando o destino ainda não está habilitado eletronicamente.",
+      src: "Fonte: Ministério da Agricultura e Pecuária (MAPA) — Certificado Fitossanitário Eletrônico."
+    },
+    {
+      stage: "Etapa 5 · Registro aduaneiro",
+      title: "Registro da DU-E",
+      text: "A Declaração Única de Exportação reúne, num único documento eletrônico, os dados aduaneiros, comerciais, fiscais e logísticos da operação. Ao ser registrada no Siscomex, gera uma Referência Única de Carga (RUC), que identifica a operação até o fim do processo — e só pode ser feita depois que as quatro etapas anteriores estão regulares.",
+      src: "Fonte: Receita Federal — Exportação Portal Único."
+    },
+    {
+      stage: "Etapa 6 · Análise de risco",
+      title: "Canal de parametrização",
+      text: "Após o registro, a DU-E é submetida a uma análise de risco que a direciona a um canal: Verde (desembaraço automático — a grande maioria dos casos), Laranja (conferência apenas dos documentos) ou Vermelho (conferência documental e física da carga). Diferente da importação, na exportação não existe canal Cinza.",
+      src: "Fonte: Receita Federal — canais de conferência aduaneira na exportação."
+    },
+    {
+      stage: "Etapa 7 · Liberação final",
+      title: "Desembaraço e averbação do embarque",
+      text: "Cumpridas as exigências do canal sorteado, a carga é desembaraçada e, após o embarque físico no navio, a operação é averbada no sistema — encerrando formalmente o processo de exportação.",
+      src: "Fonte: Receita Federal — Exportação Portal Único."
+    }
+  ];
+
+  const list = document.getElementById('stepsList');
+  steps.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'step';
+    el.innerHTML = `
+      <button class="step-head" aria-expanded="false">
+        <span class="idx mono">${String(i+1).padStart(2,'0')}</span>
+        <span class="ttl"><span class="stg mono">${s.stage}</span><h4>${s.title}</h4></span>
+        <span class="chev mono">+</span>
+      </button>
+      <div class="step-body"><div class="step-body-inner"><p style="margin:0;">${s.text}</p><div class="src">${s.src}</div></div></div>
+    `;
+    list.appendChild(el);
+    const head = el.querySelector('.step-head');
+    const body = el.querySelector('.step-body');
+    head.addEventListener('click', () => {
+      const isOpen = el.classList.contains('open');
+      list.querySelectorAll('.step.open').forEach(o => {
+        o.classList.remove('open');
+        o.querySelector('.step-body').style.maxHeight = null;
+        o.querySelector('.step-head').setAttribute('aria-expanded','false');
+      });
+      if(!isOpen){
+        el.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+        head.setAttribute('aria-expanded','true');
+      }
+    });
+    if(i === 0){ head.click(); }
+  });
+</script>
+</body>
+</html>
